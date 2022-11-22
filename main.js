@@ -70,7 +70,7 @@ function animate() {
         circle.y = (Math.random() * 500) + 50;
         score++;
         mouseIsPressed = false;
-        setInterval(shrinkCirc, 50);
+        setInterval(shrinkCirc, 1000);
     }
 
     function shrinkCirc() {
