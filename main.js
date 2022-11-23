@@ -3,7 +3,24 @@ let ctx = cnv.getContext("2d");
 cnv.width = 800;
 cnv.height = 600;
 
+// STATES
+let state = "title";
+
+window.addEventListener("load", draw);
+function draw() {
+    if (state === "title") {
+        titleScreen();
+    } else if (state === "start") {
+        runGame();
+    } else if (state === "gameover") {
+        gameOver();
+    }
+
+    requestAnimationFrame(draw);
+}
+
 // INPUTS
+// Variables
 let mouseX, mouseY;
 let mouseIsPressed = false;
 
@@ -11,7 +28,6 @@ let mouseIsPressed = false;
 document.addEventListener("mousemove", mousemoveHandler);
 document.addEventListener("mousedown", mousedownHandler);
 document.addEventListener("mouseup", mouseUpHandler);
-document.addEventListener("keydown", keydownHandler);
 
 function mousemoveHandler(event) {
     // Get rectangle info about canvas location
@@ -30,20 +46,44 @@ function mouseUpHandler() {
     mouseIsPressed = false;
 }
 
-function keydownHandler(event) {
-    if (event.code == "KeyR") {
-        circle.x = 400;
-        circle.y = 300;
-        circle.body = 50;
-        circle.r1 = 50;
-        circle.r2 = 35;
-        circle.r3 = 20;
-        circle.r4 = 5;
-        score = 0;
+function titleScreen() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, cnv.width, cnv.height);
+
+    ctx.font = "36px Arial";
+    ctx.fillStyle = "rgb(0, 255, 50)";
+    ctx.fillText(`Click to Start`, 300, 300);
+
+    if (mouseIsPressed) {
+        state = "start";
+        setTimeout(function stateOver() {
+            state = "gameover"
+        }, 10000);
     }
+    reset();
+}
+
+function runGame() {
+    drawGame();
+    scoreSystem();
+}
+
+function gameOver() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, cnv.width, cnv.height);
+
+    ctx.font = "13.5px Arial";
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgb(0, 255, 50)";
+    ctx.strokeText(`wow, you got ${score} points, try not to click on anything other than the target because that reduces the number of points you have by 1.`, 0, 300);
+
+    setTimeout(function startAgain() {
+        state = "title";
+    }, 5000);
 }
 
 // CANVAS STUFF
+// Variables
 let circle = {
     x: 400,
     y: 300,
@@ -51,50 +91,15 @@ let circle = {
     r1: 50,
     r2: 35,
     r3: 20,
-    r4: 5
+    r4: 5,
+    shrink: -2
 }
 let score = 0;
 
-requestAnimationFrame(animate);
-function animate() {
+// Draw/Animate
+function drawGame() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, cnv.width, cnv.height);
-
-    if (mouseX > circle.x - 50 && mouseX < circle.x + 50 && mouseY > circle.y - 50 && mouseY < circle.y + 50 && mouseIsPressed) {
-        circle.body = 50;
-        circle.r1 = 50;
-        circle.r2 = 35;
-        circle.r3 = 20;
-        circle.r4 = 5;
-        circle.x = (Math.random() * 700) + 50;
-        circle.y = (Math.random() * 500) + 50;
-        score++;
-        mouseIsPressed = false;
-        setInterval(shrinkCirc, 1000);
-    }
-
-    function shrinkCirc() {
-        circle.body -= 2;
-        circle.r1 -= 2;
-        circle.r2 -= 2;
-        circle.r3 -= 2;
-        circle.r4 -= 2;
-        if (circle.body < 0){
-            circle.body = 0;
-        }
-        if (circle.r1 < 0) {
-            circle.r1 = 0;
-        }
-        if (circle.r2 < 0) {
-            circle.r2 = 0;
-        }
-        if (circle.r3 < 0) {
-            circle.r3 = 0;
-        }
-        if (circle.r4 < 0) {
-            circle.r4 =0 ;
-        }
-    }
 
     // Background
     ctx.fillStyle = "rgb(255, 255, 255)";
@@ -125,6 +130,61 @@ function animate() {
     ctx.lineWidth = 1;
     ctx.strokeStyle = "rgb(0, 255, 50)";
     ctx.strokeText(`Score: ${score}`, 10, 590);
+}
 
-    requestAnimationFrame(animate)
+// Points
+function scoreSystem() {
+    // Clicking Target and Missing Target
+    if (mouseX > circle.x - circle.body && mouseX < circle.x + circle.body && mouseY > circle.y - circle.body && mouseY < circle.y + circle.body && mouseIsPressed) {
+        circle.body = 50;
+        circle.r1 = 50;
+        circle.r2 = 35;
+        circle.r3 = 20;
+        circle.r4 = 5;
+        circle.x = (Math.random() * 700) + 50;
+        circle.y = (Math.random() * 500) + 50;
+        score++;
+        shrinker();
+        mouseIsPressed = false;
+    } else if (mouseIsPressed) {
+        score--;
+        mouseIsPressed = false;
+    }
+}
+
+// Circle Smaller
+function shrinker() {
+    if (circle.body = 50) {
+        setTimeout(shrinkCirc, 500);
+    }
+}
+
+function shrinkCirc() {
+    if (circle.body > 5){
+        circle.body += circle.shrink;
+    }
+    if (circle.r1 > 5) {
+        circle.r1 += circle.shrink;
+    }
+    if (circle.r2 > 5) {
+        circle.r2 += circle.shrink;
+    }
+    if (circle.r3 > 5) {
+    circle.r3 += circle.shrink;
+        }
+    if (circle.r4 > 5) {
+        circle.r4 += circle.shrink;
+    }
+}
+
+// Reset Target and Score
+function reset() {
+    circle.x = 400;
+    circle.y = 300;
+    circle.body = 50;
+    circle.r1 = 50;
+    circle.r2 = 35;
+    circle.r3 = 20;
+    circle.r4 = 5;
+    score = 1;
 }
