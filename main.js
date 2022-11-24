@@ -56,11 +56,12 @@ function titleScreen() {
 
     if (mouseIsPressed) {
         state = "start";
-        setTimeout(function stateOver() {
+        setTimeout(function stateToOver() {
             state = "gameover"
-        }, 10000);
+        }, 5000);
     }
     reset();
+    mouseIsPressed = false;
 }
 
 function runGame() {
@@ -69,6 +70,7 @@ function runGame() {
 }
 
 function gameOver() {
+    mouseIsPressed = false;
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, cnv.width, cnv.height);
 
@@ -76,8 +78,7 @@ function gameOver() {
     ctx.lineWidth = 1;
     ctx.strokeStyle = "rgb(0, 255, 50)";
     ctx.strokeText(`wow, you got ${score} points, try not to click on anything other than the target because that reduces the number of points you have by 1.`, 0, 300);
-
-    setTimeout(function startAgain() {
+    setTimeout(function startToTitle() {
         state = "title";
     }, 5000);
 }
@@ -92,7 +93,6 @@ let circle = {
     r2: 35,
     r3: 20,
     r4: 5,
-    shrink: -2
 }
 let score = 0;
 
@@ -135,56 +135,35 @@ function drawGame() {
 // Points
 function scoreSystem() {
     // Clicking Target and Missing Target
-    if (mouseX > circle.x - circle.body && mouseX < circle.x + circle.body && mouseY > circle.y - circle.body && mouseY < circle.y + circle.body && mouseIsPressed) {
-        circle.body = 50;
-        circle.r1 = 50;
-        circle.r2 = 35;
-        circle.r3 = 20;
-        circle.r4 = 5;
+    if (mouseX > circle.x - circle.r4 && mouseX < circle.x + circle.r4 && mouseY > circle.y - circle.r4 && mouseY < circle.y + circle.r4 && mouseIsPressed) {
         circle.x = (Math.random() * 700) + 50;
         circle.y = (Math.random() * 500) + 50;
-        score++;
-        shrinker();
+        score += 5;
+        mouseIsPressed = false;
+    } else if (mouseX > circle.x - circle.r3 && mouseX < circle.x + circle.r3 && mouseY > circle.y - circle.r3 && mouseY < circle.y + circle.r3 && mouseIsPressed) {
+        circle.x = (Math.random() * 700) + 50;
+        circle.y = (Math.random() * 500) + 50;
+        score += 3;
+        mouseIsPressed = false;
+    } else if (mouseX > circle.x - circle.r2 && mouseX < circle.x + circle.r2 && mouseY > circle.y - circle.r2 && mouseY < circle.y + circle.r2 && mouseIsPressed) {
+        circle.x = (Math.random() * 700) + 50;
+        circle.y = (Math.random() * 500) + 50;
+        score += 2;
+        mouseIsPressed = false;
+    } else if (mouseX > circle.x - circle.body && mouseX < circle.x + circle.body && mouseY > circle.y - circle.body && mouseY < circle.y + circle.body && mouseIsPressed) {
+        circle.x = (Math.random() * 700) + 50;
+        circle.y = (Math.random() * 500) + 50;
+        score += 1;
         mouseIsPressed = false;
     } else if (mouseIsPressed) {
-        score--;
+        score -= 3;
         mouseIsPressed = false;
-    }
-}
-
-// Circle Smaller
-function shrinker() {
-    if (circle.body = 50) {
-        setTimeout(shrinkCirc, 500);
-    }
-}
-
-function shrinkCirc() {
-    if (circle.body > 5){
-        circle.body += circle.shrink;
-    }
-    if (circle.r1 > 5) {
-        circle.r1 += circle.shrink;
-    }
-    if (circle.r2 > 5) {
-        circle.r2 += circle.shrink;
-    }
-    if (circle.r3 > 5) {
-    circle.r3 += circle.shrink;
-        }
-    if (circle.r4 > 5) {
-        circle.r4 += circle.shrink;
     }
 }
 
 // Reset Target and Score
 function reset() {
-    circle.x = 400;
-    circle.y = 300;
-    circle.body = 50;
-    circle.r1 = 50;
-    circle.r2 = 35;
-    circle.r3 = 20;
-    circle.r4 = 5;
+    circle.x = (Math.random() * 700) + 50;
+    circle.y = (Math.random() * 500) + 50;
     score = 1;
 }
