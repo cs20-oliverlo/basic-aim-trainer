@@ -98,16 +98,17 @@ let score = 0;
 
 // Draw/Animate
 function drawGame() {
+    // Background
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, cnv.width, cnv.height);
 
-    // Background
+    // Circle
     ctx.fillStyle = "rgb(255, 255, 255)";
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circle.body, 0, 2 * Math.PI);
     ctx.fill();
 
-    // Target
+    // Rings
     ctx.beginPath;
     ctx.lineWidth = 6;
     ctx.strokeStyle = "rgb(255, 0, 0)";
