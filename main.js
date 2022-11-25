@@ -40,6 +40,10 @@ function mousemoveHandler(event) {
 
 function mousedownHandler() {
     mouseIsPressed = true;
+
+    if (state === "title") {
+        state = "start";
+    }
 }
 
 function mouseUpHandler() {
@@ -53,20 +57,14 @@ function titleScreen() {
     ctx.font = "36px Arial";
     ctx.fillStyle = "rgb(0, 255, 50)";
     ctx.fillText(`Click to Start`, 300, 300);
-
-    if (mouseIsPressed) {
-        state = "start";
-        setTimeout(function stateToOver() {
-            state = "gameover"
-        }, 5000);
-    }
-    reset();
-    mouseIsPressed = false;
 }
 
 function runGame() {
-    drawGame();
+    // Logic
     scoreSystem();
+
+    // Draw/Animate
+    drawGame();
 }
 
 function gameOver() {
@@ -74,13 +72,14 @@ function gameOver() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, cnv.width, cnv.height);
 
-    ctx.font = "13.5px Arial";
+    ctx.font = "50px Arial";
     ctx.lineWidth = 1;
     ctx.strokeStyle = "rgb(0, 255, 50)";
-    ctx.strokeText(`wow, you got ${score} points, try not to click on anything other than the target because that reduces the number of points you have by 1.`, 0, 300);
-    setTimeout(function startToTitle() {
+    ctx.strokeText(`wow, you got ${score} points`, 0, 300);
+    
+    setTimeout(function gameoverToTitle() {
         state = "title";
-    }, 5000);
+    }, 2000);
 }
 
 // CANVAS STUFF
