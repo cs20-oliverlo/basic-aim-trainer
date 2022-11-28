@@ -5,6 +5,7 @@ cnv.height = 600;
 
 // STATES
 let state = "title";
+let timeoutOnce = 0
 
 window.addEventListener("load", draw);
 function draw() {
@@ -43,28 +44,14 @@ function mousedownHandler() {
 
     if (state === "title") {
         state = "start";
+        setTimeout(function stateToGameover() {
+            state = "gameover"
+        }, 5000);
     }
 }
 
 function mouseUpHandler() {
     mouseIsPressed = false;
-}
-
-function titleScreen() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, cnv.width, cnv.height);
-
-    ctx.font = "36px Arial";
-    ctx.fillStyle = "rgb(0, 255, 50)";
-    ctx.fillText(`Click to Start`, 300, 300);
-}
-
-function runGame() {
-    // Logic
-    scoreSystem();
-
-    // Draw/Animate
-    drawGame();
 }
 
 function gameOver() {
@@ -76,10 +63,31 @@ function gameOver() {
     ctx.lineWidth = 1;
     ctx.strokeStyle = "rgb(0, 255, 50)";
     ctx.strokeText(`wow, you got ${score} points`, 0, 300);
-    
-    setTimeout(function gameoverToTitle() {
+    if (i < 1) {
+    setTimeout(function stateToTitle() {
         state = "title";
     }, 2000);
+    timeoutOnce++;
+    }
+
+}
+
+function titleScreen() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, cnv.width, cnv.height);
+
+    ctx.font = "36px Arial";
+    ctx.fillStyle = "rgb(0, 255, 50)";
+    ctx.fillText(`Click to Start`, 300, 300);
+    reset();
+}
+
+function runGame() {
+    // Logic
+    scoreSystem();
+
+    // Draw/Animate
+    drawGame();
 }
 
 // CANVAS STUFF
@@ -165,5 +173,6 @@ function scoreSystem() {
 function reset() {
     circle.x = (Math.random() * 700) + 50;
     circle.y = (Math.random() * 500) + 50;
-    score = 1;
+    score = 3;
+    timeoutOnce = 0;
 }
