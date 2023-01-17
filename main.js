@@ -63,7 +63,7 @@ function gameOver() {
     ctx.lineWidth = 1;
     ctx.strokeStyle = "rgb(0, 255, 50)";
     ctx.strokeText(`wow, you got ${score} points`, 0, 300);
-    if (i < 1) {
+    if (timeoutOnce < 1) {
     setTimeout(function stateToTitle() {
         state = "title";
     }, 2000);
